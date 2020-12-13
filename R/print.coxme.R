@@ -38,6 +38,9 @@ print.coxme <- function(x, rcoef=FALSE, digits=options()$digits, ...) {
     dimnames(temp) <- list(c("Integrated loglik", " Penalized loglik"),
                            c("Chisq", "df", "p", "AIC", "BIC"))
     print(temp, quote=F, digits=digits)
+    
+    # create list of results
+    resList <- 
 
     cat ("\nModel: ", deparse(x$call$formula), "\n")
 
@@ -47,7 +50,8 @@ print.coxme <- function(x, rcoef=FALSE, digits=options()$digits, ...) {
                signif(1 - pchisq((beta/ se)^2, 1), 2))
         dimnames(tmp) <- list(names(beta), c("coef", "exp(coef)",
             "se(coef)", "z", "p"))
-        }
+        resList$coef <- tmp
+      }
     if (rcoef) { # print the random coefs
         #next line unlists, trying to give good names to the coefs
         coef <- unlist(lapply(ranef(x), function(y) {
@@ -63,20 +67,21 @@ print.coxme <- function(x, rcoef=FALSE, digits=options()$digits, ...) {
         rtmp <- cbind(coef, exp(coef), se)
         dimnames(rtmp) <- list(names(coef), c("coef", "exp(coef)",
             "Penalized se"))
-        }
+        resList$rcoef <- rtmp
+    }
 
     if (nvar>0 && rcoef) {
         cat("Fixed and penalized coefficients\n")
         print(rbind(tmp, cbind(rtmp,NA,NA)), na.print='', digits=digits)
-        }
+    }
     else if (rcoef) {
         cat("Penalized coefficients\n")
         print(rtmp, digits=digits)
-        }
+    }
     else if (nvar>0) {
         cat("Fixed coefficients\n")
         print(tmp, digits=digits)
-        }
+    }
 
     cat("\nRandom effects\n")
 
@@ -124,8 +129,8 @@ print.coxme <- function(x, rcoef=FALSE, digits=options()$digits, ...) {
 
     print(temp, quote=F)
     invisible(x)
-    return(temp)
-    }
+    return(resList)
+}
 
 summary.coxme <- function(object, ...)
     print.coxme(object, ...)
