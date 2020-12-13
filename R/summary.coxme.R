@@ -18,8 +18,6 @@ summary.coxme <- function(x, rcoef=FALSE, digits=options()$digits, ...) {
 
     omit <- x$na.action
     #cat("  events, n = ", x$n[1], ', ', x$n[2], sep='')
-    if(length(omit))
-        #cat(" (", naprint(omit), ")", sep = "")
     loglik <- x$loglik + c(0,0, x$penalty)
     temp <- matrix(loglik, nrow=1)
     #cat("\n  Iterations=", x$iter, "\n")
