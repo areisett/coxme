@@ -1,27 +1,32 @@
 summary.coxme <- function(x, rcoef=FALSE, digits=options()$digits, ...) {
-    cat("Cox mixed-effects model fit by maximum likelihood\n")
+    #cat("Cox mixed-effects model fit by maximum likelihood\n")
     if (!is.null(x$call$data)) 
-        cat("  Data:", deparse(x$call$data))
+        #cat("  Data:", deparse(x$call$data))
     if(!is.null(x$call$subset)) {
-        cat(";  Subset:", deparse(x$call$subset), sep="\n")
+        #cat(";  Subset:", deparse(x$call$subset), sep="\n")
 	}
-    else cat("\n")
+    else #cat("\n")
 
     beta <- x$coefficients
     nvar <- length(beta)
     nfrail<- nrow(x$var) - nvar
+    
+    # create list of results
+    resList <- list()
+    resList$nvar <-  nvar
+    resList$nfrail <- nfrail
 
     omit <- x$na.action
-    cat("  events, n = ", x$n[1], ', ', x$n[2], sep='')
+    #cat("  events, n = ", x$n[1], ', ', x$n[2], sep='')
     if(length(omit))
-        cat(" (", naprint(omit), ")", sep = "")
+        #cat(" (", naprint(omit), ")", sep = "")
     loglik <- x$loglik + c(0,0, x$penalty)
     temp <- matrix(loglik, nrow=1)
-    cat("\n  Iterations=", x$iter, "\n")
+    #cat("\n  Iterations=", x$iter, "\n")
     dimnames(temp) <- list("Log-likelihood", 
                            c("NULL", "Integrated", "Fitted"))
-    print(temp)
-    cat("\n")
+    #print(temp)
+    #cat("\n")
     chi1 <- 2*diff(x$loglik[c(1,2)]) 
 
     
@@ -37,12 +42,11 @@ summary.coxme <- function(x, rcoef=FALSE, digits=options()$digits, ...) {
                     round(chi2- log(x$n[1])*x$df[2],2)))
     dimnames(temp) <- list(c("Integrated loglik", " Penalized loglik"),
                            c("Chisq", "df", "p", "AIC", "BIC"))
-    print(temp, quote=F, digits=digits)
+    #print(temp, quote=F, digits=digits)
     
-    # create list of results
-    resList <- 
+    resList$loglik_details <- temp
 
-    cat ("\nModel: ", deparse(x$call$formula), "\n")
+    #cat ("\nModel: ", deparse(x$call$formula), "\n")
 
     if (nvar > 0)  { # Not a ~1 model
         se <- sqrt(diag(x$var)[nfrail+1:nvar])
@@ -71,19 +75,19 @@ summary.coxme <- function(x, rcoef=FALSE, digits=options()$digits, ...) {
     }
 
     if (nvar>0 && rcoef) {
-        cat("Fixed and penalized coefficients\n")
-        print(rbind(tmp, cbind(rtmp,NA,NA)), na.print='', digits=digits)
+        # cat("Fixed and penalized coefficients\n")
+        #print(rbind(tmp, cbind(rtmp,NA,NA)), na.print='', digits=digits)
     }
     else if (rcoef) {
-        cat("Penalized coefficients\n")
-        print(rtmp, digits=digits)
+        #cat("Penalized coefficients\n")
+        #print(rtmp, digits=digits)
     }
     else if (nvar>0) {
-        cat("Fixed coefficients\n")
-        print(tmp, digits=digits)
+        #cat("Fixed coefficients\n")
+        #print(tmp, digits=digits)
     }
 
-    cat("\nRandom effects\n")
+    #cat("\nRandom effects\n")
 
     random <- VarCorr(x)
     nrow <-  sapply(random, 
