@@ -1,4 +1,4 @@
-print.coxme <- function(x, rcoef=FALSE, digits=options()$digits, ...) {
+summary.coxme <- function(x, rcoef=FALSE, digits=options()$digits, ...) {
     cat("Cox mixed-effects model fit by maximum likelihood\n")
     if (!is.null(x$call$data)) 
         cat("  Data:", deparse(x$call$data))
@@ -127,7 +127,6 @@ print.coxme <- function(x, rcoef=FALSE, digits=options()$digits, ...) {
                    rep("", maxcol-3))
     dimnames(temp) <- list(rep("", nrow(temp)), temp4)
 
-    print(temp, quote=F)
-    invisible(x)
+    return(resList)
 }
 
