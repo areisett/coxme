@@ -1,4 +1,4 @@
-summary.coxme <- function(x, rcoef=FALSE, digits=options()$digits, ...) {
+summary.coxme <- function(x, rcoef=TRUE, digits=options()$digits, ...) {
     #cat("Cox mixed-effects model fit by maximum likelihood\n")
     if (!is.null(x$call$data)) 
         #cat("  Data:", deparse(x$call$data))
@@ -70,6 +70,11 @@ summary.coxme <- function(x, rcoef=FALSE, digits=options()$digits, ...) {
         dimnames(rtmp) <- list(names(coef), c("coef", "exp(coef)",
             "Penalized se"))
         resList$rcoef <- rtmp
+        rtmp$z <- NA
+        rmpt$p <- NA
+        dimnames(rtmp) <- list(names(coef), c("coef", "exp(coef)",
+                                          "se(coef)", "z", "p"))
+        resList$coef <- rbind(tmp, rtmp)
     }
 
     if (nvar>0 && rcoef) {
