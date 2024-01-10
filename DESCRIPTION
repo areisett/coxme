@@ -6,6 +6,7 @@ Depends: survival (>= 2.36.14), methods, bdsmatrix(>= 1.3), R(>= 2.10)
 Imports: nlme, Matrix (>= 1.0)
 Suggests: mvtnorm, kinship2
 LinkingTo: bdsmatrix
+URL: https://github.com/areisett/coxme
 LazyData: Yes
 LazyLoad: Yes
 Authors@R: person(c("Terry", "M."), "Therneau", role=c("aut", "cre"),
